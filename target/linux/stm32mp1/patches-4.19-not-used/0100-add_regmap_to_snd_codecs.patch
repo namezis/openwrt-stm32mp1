@@ -1,0 +1,10 @@
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -1228,6 +1228,7 @@ config SND_SOC_WM8993
+ 
+ config SND_SOC_WM8994
+ 	tristate "Wolfson Microelectronics WM8994 codec"
++	select REGMAP_IRQ
+ 
+ config SND_SOC_WM8995
+ 	tristate
