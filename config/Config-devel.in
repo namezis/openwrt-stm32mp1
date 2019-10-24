@@ -100,6 +100,15 @@ menuconfig DEVEL
 		  It can be a git hash or a branch name.
 		  If unused, the clone's repository HEAD will be checked-out.
 
+	config KERNEL_GIT_REF_DESC
+		string "Enter git ref description" if DEVEL
+		depends on (KERNEL_GIT_REF != "")
+		default ""
+		help
+		  Enter the git ref description used to describe the git checkout repository
+		  after it is cloned, and before making it a tar-ball.
+		  If unused, the clone's repository HEAD will be checked-out.
+
 	config BUILD_LOG
 		bool "Enable log files during build process" if DEVEL
 		help
