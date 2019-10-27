@@ -27,38 +27,115 @@ endef
 $(eval $(call KernelPackage,6lowpan))
 
 
-define KernelPackage/bluetooth
-  SUBMENU:=$(OTHER_MENU)
-  TITLE:=Bluetooth support
-  DEPENDS:=@USB_SUPPORT +kmod-usb-core +kmod-crypto-hash +kmod-crypto-ecb +kmod-lib-crc16 +kmod-hid +kmod-crypto-cmac +kmod-regmap-core +!LINUX_4_9:kmod-crypto-ecdh
-  KCONFIG:= \
+define KernelPackage/bluetooth/config
+  if PACKAGE_kmod-bluetooth
+
+	config PACKAGE_KMOD_BLUETOOTH_USB
+		bool "Kernel support for USB Bluetooth devices"
+		default n
+
+	config PACKAGE_KMOD_BLUETOOTH_BCM
+		bool "Kernel support for BCM4343 over Bluetooth / WLAN devices"
+		default n
+
+	config PACKAGE_KMOD_BLUETOOTH_INTEL
+		bool "Kernel support for Intel Bluetooth controllers"
+		default n
+
+	config PACKAGE_KMOD_BLUETOOTH_TI
+		bool "Kernel support for Texas Instruments controllers"
+		default n
+
+  endif
+endef
+
+BLUETOOTH_KCONFIG:= \
 	CONFIG_BT \
 	CONFIG_BT_BREDR=y \
 	CONFIG_BT_DEBUGFS=n \
 	CONFIG_BT_LE=y \
 	CONFIG_BT_RFCOMM \
-	CONFIG_BT_BNEP \
-	CONFIG_BT_HCIBTUSB \
-	CONFIG_BT_HCIBTUSB_BCM=n \
 	CONFIG_BT_HCIUART \
-	CONFIG_BT_HCIUART_BCM=n \
-	CONFIG_BT_HCIUART_INTEL=n \
 	CONFIG_BT_HCIUART_H4 \
-	CONFIG_BT_HCIUART_NOKIA=n \
-	CONFIG_BT_HIDP
-  $(call AddDepends/rfkill)
-  FILES:= \
+	CONFIG_BT_HCIUART_NOKIA=n
+
+BLUETOOTH_FILES:= \
 	$(LINUX_DIR)/net/bluetooth/bluetooth.ko \
 	$(LINUX_DIR)/net/bluetooth/rfcomm/rfcomm.ko \
-	$(LINUX_DIR)/net/bluetooth/bnep/bnep.ko \
-	$(LINUX_DIR)/net/bluetooth/hidp/hidp.ko \
-	$(LINUX_DIR)/drivers/bluetooth/hci_uart.ko \
-	$(LINUX_DIR)/drivers/bluetooth/btusb.ko
-ifeq ($(strip $(call CompareKernelPatchVer,$(KERNEL_PATCHVER),ge,4.1.0)),1)
-  FILES+= \
-	$(LINUX_DIR)/drivers/bluetooth/btintel.ko
+	$(LINUX_DIR)/drivers/bluetooth/hci_uart.ko
+
+BLUETOOTH_AUTOLOAD:= \
+	bluetooth rfcomm hci_uart
+
+ifeq ($(CONFIG_PACKAGE_KMOD_BLUETOOTH_BCM),y)
+  BLUETOOTH_KCONFIG += \
+	CONFIG_BT_BCM=m \
+	CONFIG_BT_HCIUART_BCM=y
+  ifeq ($(CONFIG_PACKAGE_KMOD_BLUETOOTH_USB),y)
+	  BLUETOOTH_KCONFIG += \
+		CONFIG_BT_HIDP \
+		CONFIG_BT_BNEP \
+		CONFIG_BT_HCIBTUSB_BCM=y
+	  BLUETOOTH_AUTOLOAD += \
+		bnep hidp btusb
+	  BLUETOOTH_FILES += \
+		$(LINUX_DIR)/net/bluetooth/bnep/bnep.ko \
+		$(LINUX_DIR)/net/bluetooth/hidp/hidp.ko \
+		$(LINUX_DIR)/drivers/bluetooth/btusb.ko
+  endif
+  BLUETOOTH_FILES += \
+	$(LINUX_DIR)/drivers/bluetooth/btbcm.ko
+  BLUETOOTH_AUTOLOAD += \
+	btbcm
+else
+  BLUETOOTH_KCONFIG += \
+	CONFIG_BT_BCM=n \
+	CONFIG_BT_HCIBTUSB_BCM=n \
+	CONFIG_BT_HCIUART_BCM=n
 endif
-  AUTOLOAD:=$(call AutoProbe,bluetooth rfcomm bnep hidp hci_uart btusb)
+
+ifeq ($(CONFIG_PACKAGE_KMOD_BLUETOOTH_INTEL),y)
+  BLUETOOTH_KCONFIG += \
+	 \
+	CONFIG_BT_INTEL=m \
+	CONFIG_BT_HCIUART_INTEL=y
+  ifeq ($(CONFIG_PACKAGE_KMOD_BLUETOOTH_USB),y)
+	  BLUETOOTH_KCONFIG += \
+		CONFIG_BT_HIDP \
+		CONFIG_BT_BNEP \
+		CONFIG_BT_HCIBTUSB=m
+	  BLUETOOTH_AUTOLOAD += \
+		bnep hidp btusb
+	  BLUETOOTH_FILES += \
+		$(LINUX_DIR)/net/bluetooth/bnep/bnep.ko \
+		$(LINUX_DIR)/net/bluetooth/hidp/hidp.ko \
+		$(LINUX_DIR)/drivers/bluetooth/btusb.ko
+  endif
+  BLUETOOTH_FILES += \
+	$(LINUX_DIR)/drivers/bluetooth/btintel.ko
+  BLUETOOTH_AUTOLOAD += \
+	btintel
+else
+  BLUETOOTH_KCONFIG += \
+	CONFIG_BT_INTEL=n \
+	CONFIG_BT_HCIUART_INTEL=n
+endif
+
+ifeq ($(CONFIG_PACKAGE_KMOD_BLUETOOTH_TI),y)
+  BLUETOOTH_KCONFIG += \
+	CONFIG_SERIAL_DEV_BUS=y \
+	CONFIG_BT_HCIUART_SERDEV=y \
+	CONFIG_BT_HCIUART_LL=y
+endif
+
+define KernelPackage/bluetooth
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Bluetooth support
+  DEPENDS:=@USB_SUPPORT +kmod-usb-core +kmod-crypto-hash +kmod-crypto-ecb +kmod-lib-crc16 +kmod-hid +kmod-crypto-cmac +kmod-regmap-core +!LINUX_4_9:kmod-crypto-ecdh
+  KCONFIG:=$(BLUETOOTH_KCONFIG)
+  $(call AddDepends/rfkill)
+  FILES:=$(BLUETOOTH_FILES)
+  AUTOLOAD:=$(call AutoProbe, $(BLUETOOTH_AUTOLOAD))
 endef
 
 define KernelPackage/bluetooth/description
@@ -66,6 +143,7 @@ define KernelPackage/bluetooth/description
 endef
 
 $(eval $(call KernelPackage,bluetooth))
+
 
 define KernelPackage/ath3k
   SUBMENU:=$(OTHER_MENU)

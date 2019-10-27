@@ -7,6 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
+-include $(TOPDIR)/.config
 
 PKG_NAME:=kernel
 PKG_FLAGS:=hold
