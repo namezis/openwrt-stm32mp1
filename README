@@ -13,7 +13,21 @@
                 |__| W I R E L E S S   F R E E D O M
        -----------------------------------------------------
 
-This is the buildsystem for the OpenWrt Linux distribution.
+This is the build system for the OpenWrt Linux distribution.
+
+Master branch is tested to run on STM32MP1 DK2 board in basic boot (not secure) boot.
+
+So far working components are:
+
+     - toolchain : built by OpenWRT
+     - kernel    : supplied by ST
+     - u-boot    : supplied by ST
+     - bluez     : supplied by OpenWRT
+     - sample BLE application (gobbledegook) : package for this demo
+
+  more to come...
+
+Working configuration is located in root under: config_stm32mp1_dk2
 
 To build your own firmware you need a Linux, BSD or MacOSX system (case
 sensitive filesystem required). Cygwin is unsupported because of the lack
