@@ -1,0 +1,13 @@
+#!/bin/sh
+
+hciconfig -a
+hciconfig hci0 up
+hciconfig -a
+
+btmgmt -i 0 power off
+btmgmt -i 0 le on
+btmgmt -i 0 connectable on
+btmgmt -i 0 advertising on
+btmgmt -i 0 power on
+
+ggk-standalone -d
