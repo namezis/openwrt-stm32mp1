@@ -61,6 +61,16 @@ define Package/brcmfmac-firmware-43430-sdio-rpi-3b/install
 endef
 $(eval $(call BuildPackage,brcmfmac-firmware-43430-sdio-rpi-3b))
 
+Package/brcmfmac-firmware-43430-sdio-murata-1dx = $(call Package/firmware-default,Broadcom BCM43430 NVRAM for MURATA 1DX)
+define Package/brcmfmac-firmware-43430-sdio-murata-1dx/install
+	$(INSTALL_DIR) $(1)/lib/firmware/brcm
+	$(INSTALL_DATA) \
+		$(PKG_BUILD_DIR)/brcm/brcmfmac43430-sdio.MUR1DX.txt \
+		$(1)/lib/firmware/brcm/brcmfmac43430-sdio.MUR1DX.txt
+endef
+$(eval $(call BuildPackage,brcmfmac-firmware-43430-sdio-murata-1dx))
+
+
 Package/brcmfmac-firmware-43430-sdio-rpi-zero-w = $(call Package/firmware-default,Broadcom BCM43430 NVRAM for Raspberry Pi Zero W)
 define Package/brcmfmac-firmware-43430-sdio-rpi-zero-w/install
 	$(INSTALL_DIR) $(1)/lib/firmware/brcm

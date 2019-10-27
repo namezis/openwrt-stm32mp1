@@ -36,3 +36,14 @@ define Package/ti-5052-firmware/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/ti_5052.fw $(1)/lib/firmware
 endef
 $(eval $(call BuildPackage,ti-5052-firmware))
+
+Package/ti-cc2560-firmware = $(call Package/firmware-default,TI CC2560 firmware)
+define Package/ti-cc2560-firmware/install
+	$(INSTALL_DIR) $(1)/lib/firmware/ti-connectivity
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/ti-connectivity/TIInit_6.6.15.bts \
+	$(1)/lib/firmware/ti-connectivity/
+endef
+$(eval $(call BuildPackage,ti-cc2560-firmware))
+
+
+
