@@ -59,6 +59,23 @@ MAKE_FLAGS_FIP = \
 	BL33_CFG=$(STAGING_DIR_IMAGE)/u-boot.dtb \
 	fip
 
+ifeq ($(CONFIG_ARM_TRUSTED_FIRMWARE_STM32MP1_DEBUG),y)
+	MAKE_FLAGS+=DEBUG=1
+	MAKE_FLAGS_FIP+=DEBUG=1
+	BUILD_DIR_TFA:=debug
+else
+	BUILD_DIR_TFA:=release
+endif
+
+define Package/arm-trusted-firmware-stm32mp1/config
+	config ARM_TRUSTED_FIRMWARE_STM32MP1_DEBUG
+		depends on PACKAGE_arm-trusted-firmware-stm32mp1
+		bool "Enable debug for STM32MP1 TF-A"
+		default n
+		help
+			This option enables debug for TF-A.
+endef
+
 define Build/fip-image
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		CROSS_COMPILE=$(TARGET_CROSS) \
@@ -76,8 +93,8 @@ endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
-	$(CP) $(PKG_BUILD_DIR)/build/stm32mp1/release/tf-a-stm32mp157c-dk2.stm32 $(STAGING_DIR_IMAGE)/tf-a-stm32mp157c-dk2.stm32
-	$(CP) $(PKG_BUILD_DIR)/build/stm32mp1/release/fip.bin $(STAGING_DIR_IMAGE)/fip.bin
+	$(CP) $(PKG_BUILD_DIR)/build/stm32mp1/$(BUILD_DIR_TFA)/tf-a-stm32mp157c-dk2.stm32 $(STAGING_DIR_IMAGE)/tf-a-stm32mp157c-dk2.stm32
+	$(CP) $(PKG_BUILD_DIR)/build/stm32mp1/$(BUILD_DIR_TFA)/fip.bin $(STAGING_DIR_IMAGE)/fip.bin
 endef
 
 define Build/Clean
