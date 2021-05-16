@@ -99,6 +99,7 @@ define KernelPackage/nf-conntrack
 	$(KCONFIG_NF_CONNTRACK)
   FILES:=$(foreach mod,$(NF_CONNTRACK-m),$(LINUX_DIR)/net/$(mod).ko)
   AUTOLOAD:=$(call AutoProbe,$(notdir $(NF_CONNTRACK-m)))
+  DEPENDS:=+kmod-lib-crc32c
 endef
 
 define KernelPackage/nf-conntrack/install
@@ -154,9 +155,8 @@ define KernelPackage/nf-flow
 	CONFIG_NF_FLOW_TABLE_HW
   DEPENDS:=+kmod-nf-conntrack
   FILES:= \
-	$(LINUX_DIR)/net/netfilter/nf_flow_table.ko \
-	$(LINUX_DIR)/net/netfilter/nf_flow_table_hw.ko
-  AUTOLOAD:=$(call AutoProbe,nf_flow_table nf_flow_table_hw)
+	$(LINUX_DIR)/net/netfilter/nf_flow_table.ko
+  AUTOLOAD:=$(call AutoProbe,nf_flow_table)
 endef
 
 $(eval $(call KernelPackage,nf-flow))
