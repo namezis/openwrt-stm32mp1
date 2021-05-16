@@ -1,0 +1,31 @@
+   ________   _________   _____ ______    ________     _______
+  |\   ____\ |\___   ___\|\   _ \  _   \ |\_____  \   /  ___  \
+  \ \  \___|_\|___ \  \_|\ \  \\\__\ \  \\|____|\ /_ /__/|_/  /|
+   \ \_____  \    \ \  \  \ \  \\|__| \  \     \|\  \|__|//  / /
+    \|____|\  \    \ \  \  \ \  \    \ \  \   __\_\  \   /  /_/__
+      ____\_\  \    \ \__\  \ \__\    \ \__\ |\_______\ |\________\
+     |\_________\    \|__|   \|__|     \|__| \|_______|  \|_______|
+     \|_________|
+
+    _______                     ________        __
+   |       |.-----.-----.-----.|  |  |  |.----.|  |_
+   |   -   ||  _  |  -__|     ||  |  |  ||   _||   _|
+   |_______||   __|_____|__|__||________||__|  |____|
+            |__| W I R E L E S S   F R E E D O M
+   ---------------------------------------------------
+
+================= FAILSAFE MODE active ================
+special commands:
+* firstboot	     reset settings to factory defaults
+* mount_root	 mount root-partition with config files
+
+after mount_root:
+* passwd			 change root's password
+* /etc/config		    directory with config files
+
+for more help see:
+https://openwrt.org/docs/guide-user/troubleshooting/
+- failsafe_and_factory_reset
+- root_password_reset
+=======================================================
+
