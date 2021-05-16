@@ -18,7 +18,11 @@ ifneq ($(call qstrip,$(CONFIG_KERNEL_GIT_CLONE_URI)),)
   ifeq ($(call qstrip,$(CONFIG_KERNEL_GIT_REF)),)
     CONFIG_KERNEL_GIT_REF:=HEAD
   endif
-  LINUX_VERSION:=$(LINUX_VERSION)-$(call sanitize_uri,$(CONFIG_KERNEL_GIT_REF))
+  ifeq ($(call qstrip,$(CONFIG_KERNEL_GIT_REF_DESC)),)
+    LINUX_VERSION:=$(LINUX_VERSION)-$(call sanitize_uri,$(CONFIG_KERNEL_GIT_REF))
+  else
+    LINUX_VERSION:=$(call qstrip,$(CONFIG_KERNEL_GIT_REF_DESC))
+  endif
 else
 ifdef KERNEL_PATCHVER
   LINUX_VERSION:=$(KERNEL_PATCHVER)$(strip $(LINUX_VERSION-$(KERNEL_PATCHVER)))
