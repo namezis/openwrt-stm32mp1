@@ -90,7 +90,6 @@ define prepare_rootfs
 	$(if $(SOURCE_DATE_EPOCH),sed -i "s/Installed-Time: .*/Installed-Time: $(SOURCE_DATE_EPOCH)/" $(1)/usr/lib/opkg/status)
 	@-find $(1) -name CVS -o -name .svn -o -name .git -o -name '.#*' | $(XARGS) rm -rf
 	rm -rf \
-		$(1)/boot \
 		$(1)/tmp/* \
 		$(1)/usr/lib/opkg/info/*.postinst* \
 		$(1)/usr/lib/opkg/lists/* \
