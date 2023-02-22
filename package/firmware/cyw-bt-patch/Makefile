@@ -34,7 +34,7 @@ define Package/cyw-bt-patch/install
 	    $(PKG_BUILD_DIR)/LICENCE.cypress \
 	    $(1)/lib/firmware/LICENCE.cypress.bt-patch
 	$(INSTALL_DATA) \
-	    $(PKG_BUILD_DIR)/BCM4343A1_*.1DX.hcd \
+	    $(PKG_BUILD_DIR)/BCM43430A1_*.1DX.hcd \
 	    $(1)/lib/firmware/brcm/BCM43430A1.hcd
 endef
 
