@@ -1,0 +1,23 @@
+--- a/board/st/stm32mp1/stm32mp1.c
++++ a/board/st/stm32mp1/stm32mp1.c
+@@ -884,17 +884,9 @@
+    return dev_part[(bootmode & TAMP_BOOT_INSTANCE_MASK) - 1];
+ }
+ 
+-int mmc_get_env_dev(void)
+-{
+-	u32 bootmode;
+-
+-	if (CONFIG_SYS_MMC_ENV_DEV >= 0)
+-		return CONFIG_SYS_MMC_ENV_DEV;
+-
+-	bootmode = get_bootmode();
+-
+-	/* use boot instance to select the correct mmc device identifier */
+-	return (bootmode & TAMP_BOOT_INSTANCE_MASK) - 1;
++int board_mmc_get_env_dev(int devno)
++{
++	return devno;
+ }
+ 
+ #if defined(CONFIG_OF_BOARD_SETUP)
